@@ -3,6 +3,7 @@ import { Express } from 'express';
 import AppController from '../controllers/AppController';
 import UsersController from '../controllers/UsersController';
 import AuthController from '../controllers/AuthController';
+import FilesController from '../controllers/FilesController';
 import { APIError, errorResponse } from '../middlewares/error';
 import { basicAuthenticate, xTokenAuthenticate } from '../middlewares/auth';
 
@@ -15,6 +16,8 @@ const injectRoutes = (api) => {
 
   api.get('/connect', basicAuthenticate, AuthController.getConnect);
   api.get('/disconnect', xTokenAuthenticate, AuthController.getDisconnect);
+
+  api.post('/files', xTokenAuthenticate, FilesController.postUpload);
 
   api.all('*', (req, res, next) => {
     errorResponse(new APIError(404, `Cannot ${req.method} ${req.url}`), req, res, next);
